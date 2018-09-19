@@ -15,7 +15,7 @@
 <script>
 import service from '../services/services'
 export default{
-  name: 'Login',
+  name: 'SignIn',
   data () {
     return {
       email: '',
@@ -23,13 +23,14 @@ export default{
     }
   },
   methods: {
-    login() {
+    login () {
       service.login(this.email, this.password)
-      .then((res) => {
-        alert('login sucees !')
-      }).catch((err) => {
-        alert('Error. ', err)
-      })
+        .then((res) => {
+          alert('login sucees !')
+        })
+        .catch((err) => {
+          alert('Error. ', err)
+        })
     }
   }
 }
