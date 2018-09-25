@@ -5,9 +5,16 @@
         <p class="md-title">SIGN UP</p>
       </md-card-header>
       <md-card-content>
-        <input type="text" placeholder="e-mail" v-model="email"><br>
-        <input type="password" placeholder="password" v-model="password"><br>
+        <md-field>
+          <label>E-Mail</label>
+          <md-input v-model="email"></md-input>
+        </md-field>
+        <md-field>
+          <label>password</label>
+          <md-input type="password" v-model="password"></md-input><br>
+        </md-field>
         <md-button class="md-raised" v-on:click="signup" >sing up</md-button>
+        <p>or go back to <router-link to="/login">login</router-link></p>
       </md-card-content>
     </md-card>
   </div>
