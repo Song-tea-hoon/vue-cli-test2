@@ -20,8 +20,8 @@ export default{
       let ref = firebase.database().ref('todo').push()
       ref.set(item)
       ref.once('value', snapshot => {
-        console.log('addTodoList', snapshot.val())
-        resolve(snapshot.val())
+        console.log('addTodoList key : ', snapshot.key, '\n value : ', snapshot.val())
+        resolve(snapshot)
       })
     })
   }

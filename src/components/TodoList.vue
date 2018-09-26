@@ -1,30 +1,33 @@
 <template>
   <div>
     <h1>Todo List</h1>
-    <div class="md-layout  md-gutter">
-      <div class="md-layout-item">
-        <md-field>
-          <label>title</label>
-          <md-input v-model="title"></md-input>
-        </md-field>
+    <md-card class="md-size-70">
+      <div class="md-layout  md-gutter">
+        <div class="md-layout-item">
+          <md-field>
+            <label>title</label>
+            <md-input v-model="title"></md-input>
+          </md-field>
+        </div>
+        <div class="md-layout-item">
+          <md-field>
+            <label>name</label>
+            <md-input v-model="name"></md-input>
+          </md-field>
+        </div>
+        <div class="md-layout-item md-size-15">
+          <md-button class="md-raised" v-on:click="addItem">add</md-button>
+        </div>
       </div>
-      <div class="md-layout-item">
-        <md-field>
-          <label>name</label>
-          <md-input v-model="name"></md-input>
-        </md-field>
-      </div>
-      <div class="md-layout-item md-size-15">
-        <md-button class="md-raised" v-on:click="addItem">add</md-button>
-      </div>
-    </div>
-    <md-list>
-      <md-list-item v-for="todoItem in todoList" v-bind:key="todoItem.key">
-        <md-checkbox></md-checkbox>
-        <span>{{todoItem.title}}</span>
-        <span>{{todoItem.name}}</span>
-      </md-list-item>
-    </md-list>
+      <md-list>
+        <md-list-item v-for="todoItem in todoList" v-bind:key="todoItem.key">
+          <md-checkbox v-model="todoItem.todo"></md-checkbox>
+          <span>{{todoItem.title}}</span>
+          <span>{{todoItem.name}}</span>
+          <span>{{todoItem.addTime | time}}</span>
+        </md-list-item>
+      </md-list>
+    </md-card>
     <!-- <ul>
       <li v-for="todoItem in todoList" v-bind:key="todoItem.key">
         <span>{{todoItem.name}}</span>
@@ -50,22 +53,18 @@ export default{
     }
   },
   created () {
-    // console.log(firebase.auth().currentUser)
-    // let user = firebase.auth().currentUser;
-    // let ref = firebase.database().ref('todo').push()
-    // ref.set({
-    //   do: false,
-    //   name: 'testName',
-    //   timetamp: 'time',
-    //   title: 'title'
-    // })
-
-    services.getTodoList()
-      .then((data) => {
-        this.todoList = data
-      })
+    this.getList()
   },
   methods: {
+    getList () {
+      services.getTodoList()
+        .then((data) => {
+          this.todoList = data
+        })
+        .catch(err => {
+          alert('Get list error : ' + err)
+        })
+    },
     addItem () {
       let item = {
         todo: false,
@@ -80,9 +79,24 @@ export default{
 
       services.addTodoList(item)
         .then(data => {
-          console.log(data.key);
-          //this.todoList = Object.assign({}, this.todoList, data)
+          // 데이터 삽입
+          this.$set(this.todoList, data.key, data.val())
         })
+        .catch(err => {
+          alert('Add list error : ' + err)
+        })
+      console.log(this.todoList)
+    }
+  },
+  filters: {
+    time (val) {
+      let date = new Date(val)
+      let y = date.getFullYear()
+      let m = date.getMonth() + 1
+      let d = date.getDate()
+      let h = date.getHours()
+      let mn = date.getMinutes()
+      return y + '/' + m + '/' + d + '-' + (h < 10 ? '0' + h : h) + ':' + (mn < 10 ? '0' + mn : mn)
     }
   }
 }
